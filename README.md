@@ -1,11 +1,11 @@
 <h1 align="center">
-    <br />
+    <!-- <br />
         <img 
             src="./github-readme/video.png"
             alt="Crud Angular | Filmes" 
             width="120" 
         />
-    <br />
+    <br /> -->
     DevJobs | Vagas para Desenvolvedores de Software
 </h1>
 

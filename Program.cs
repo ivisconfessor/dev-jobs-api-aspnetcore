@@ -1,4 +1,5 @@
 using DevJobs.API.Persistence;
+using DevJobs.API.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,8 @@ var connectionString = builder.Configuration.GetConnectionString("DevJobsCs");
 
 builder.Services.AddDbContext<DevJobsContext>(options => 
     options.UseSqlServer(connectionString));
+
+builder.Services.AddScoped<IJobVacancyRepository, JobVacancyRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

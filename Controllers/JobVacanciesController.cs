@@ -39,6 +39,22 @@ namespace DevJobs.API.Controllers
         }
 
         // POST api/v1/job-vacancies
+        /// <summary>
+        /// Cadastrar uma vaga de emprego.
+        /// </summary>
+        /// <remarks>
+        /// {
+        ///   "title": "Dev .NET Jr",
+        ///   "description": "Vaga para sustentação e elaboração de aplicações .NET Core.",
+        ///   "company": "Artigo Tech",
+        ///   "isRemote": true,
+        ///   "salaryRange": "3000 - 5000"
+        /// }
+        /// </remarks>
+        /// <param name="model">Dados da vaga.</param>
+        /// <returns>Objeto recém-criado.</returns>
+        /// <response code="201">Sucesso.</response>
+        /// <response code="400">Dados inválidos.</response>
         [HttpPost]
         public IActionResult Post(AddJobVacancyInputModel model)
         {
@@ -49,6 +65,9 @@ namespace DevJobs.API.Controllers
                 model.IsRemote,
                 model.SalaryRange
             );
+
+            if (jobVacancy.Title.Length > 30)
+                return BadRequest("Título precisa ter menos de 30 caracteres.");
 
             _repository.Add(jobVacancy);
 

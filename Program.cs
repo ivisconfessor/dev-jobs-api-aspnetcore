@@ -2,6 +2,7 @@ using DevJobs.API.Persistence;
 using DevJobs.API.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using SendGrid.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Sinks.MSSqlServer;
 
@@ -14,7 +15,14 @@ var connectionString = builder.Configuration.GetConnectionString("DevJobsCs");
 builder.Services.AddDbContext<DevJobsContext>(options => 
     options.UseSqlServer(connectionString));
 
+// builder.Services.AddDbContext<DevJobsContext>(options => 
+//     options.UseInMemoryDatabase("DevJobs"));
+
 builder.Services.AddScoped<IJobVacancyRepository, JobVacancyRepository>();
+
+var sendGridApiKey = builder.Configuration.GetSection("SendGridApiKey").Value;
+
+builder.Services.AddSendGrid(o => o.ApiKey = sendGridApiKey);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -37,17 +45,17 @@ builder.Services.AddSwaggerGen(c => {
     c.IncludeXmlComments(xmlPath);
 });
 
-builder.Host.ConfigureAppConfiguration((hostingContext, config) => {
-    Serilog.Log.Logger = new LoggerConfiguration()
-        .Enrich.FromLogContext()
-        .WriteTo.MSSqlServer(connectionString,
-            sinkOptions: new MSSqlServerSinkOptions() {
-                AutoCreateSqlTable = true,
-                TableName = "TB_LOGS"
-            })
-        .WriteTo.Console()
-        .CreateLogger();
-}).UseSerilog();
+// builder.Host.ConfigureAppConfiguration((hostingContext, config) => {
+//     Serilog.Log.Logger = new LoggerConfiguration()
+//         .Enrich.FromLogContext()
+//         .WriteTo.MSSqlServer(connectionString,
+//             sinkOptions: new MSSqlServerSinkOptions() {
+//                 AutoCreateSqlTable = true,
+//                 TableName = "TB_LOGS"
+//             })
+//         .WriteTo.Console()
+//         .CreateLogger();
+// }).UseSerilog();
 
 var app = builder.Build();
 
